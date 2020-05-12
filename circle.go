@@ -9,10 +9,10 @@ import (
 )
 
 // NewCircle Takes a point and calculates the circle polygon given a radius in degrees, radians, miles, or kilometers;
-func NewCircle(center *Coordinate, radius float64, unit Unit) (*geojson.Geometry, error) {
+func NewCircle(center *Point, radius float64, unit Unit) (*geojson.Geometry, error) {
 	steps := 32 // TODO: options object?
 
-	coordinates := []Coordinate{}
+	coordinates := []Point{}
 
 	for i := 0; i < steps; i++ {
 		bearing := float64(i * -360 / steps)

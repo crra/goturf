@@ -8,11 +8,11 @@ import (
 	geojson "github.com/paulmach/go.geojson"
 )
 
-// CoordinateCallback is used for walking all coordinates
-type CoordinateCallback func(coordinate *Coordinate, coordIndex, featureIndex, multiFeatureIndex, geometryIndex int) bool
+// PointCallback is used for walking all point
+type PointCallback func(p *Point, coordIndex, featureIndex, multiFeatureIndex, geometryIndex int) bool
 
-// CoordEach visits all Coordinates in a geojson strtuct
-func CoordEach(thing interface{}, callback CoordinateCallback) bool {
+// CoordEach visits all Coordinates in a geojson struct
+func CoordEach(thing interface{}, callback PointCallback) bool {
 	// A empty thing is fine
 	if thing == nil {
 		return true
@@ -78,7 +78,7 @@ func CoordEach(thing interface{}, callback CoordinateCallback) bool {
 
 			switch currentGeometry.Type {
 			case geojson.GeometryPoint:
-				if callback(NewCoordinateFromTuple(currentGeometry.Point), coordIndex, featureIndex, multiFeatureIndex, geometryIndex) == false {
+				if callback(NewPointFromTuple(currentGeometry.Point), coordIndex, featureIndex, multiFeatureIndex, geometryIndex) == false {
 					return false
 				}
 				coordIndex++
@@ -94,7 +94,7 @@ func CoordEach(thing interface{}, callback CoordinateCallback) bool {
 				}
 
 				for _, point := range points {
-					if callback(NewCoordinateFromTuple(point), coordIndex, featureIndex, multiFeatureIndex, geometryIndex) == false {
+					if callback(NewPointFromTuple(point), coordIndex, featureIndex, multiFeatureIndex, geometryIndex) == false {
 						return false
 					}
 					coordIndex++
@@ -118,7 +118,7 @@ func CoordEach(thing interface{}, callback CoordinateCallback) bool {
 
 				for _, line := range lines {
 					for _, point := range line {
-						if callback(NewCoordinateFromTuple(point), coordIndex, featureIndex, multiFeatureIndex, geometryIndex) == false {
+						if callback(NewPointFromTuple(point), coordIndex, featureIndex, multiFeatureIndex, geometryIndex) == false {
 							return false
 						}
 						coordIndex++
@@ -139,7 +139,7 @@ func CoordEach(thing interface{}, callback CoordinateCallback) bool {
 				for _, poly := range currentGeometry.MultiPolygon {
 					for _, line := range poly {
 						for _, point := range line {
-							if callback(NewCoordinateFromTuple(point), coordIndex, featureIndex, multiFeatureIndex, geometryIndex) == false {
+							if callback(NewPointFromTuple(point), coordIndex, featureIndex, multiFeatureIndex, geometryIndex) == false {
 								return false
 							}
 							coordIndex++

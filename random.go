@@ -13,29 +13,30 @@ func init() {
 	rand.Seed(time.Now().UTC().UnixNano())
 }
 
-// NewRandomCoordinate generates a random coordinate.
+// NewRandomPoint generates a random point.
 // If a bbox is given the coordinate will be inside this bbox.
-func NewRandomCoordinate(bbox *Bbox) *Coordinate {
+func NewRandomPoint(bbox *Bbox) *Point {
 	if bbox == nil {
-		return &Coordinate{
-			Lon: rand.Float64() * 360,
-			Lat: rand.Float64() * 180,
-		}
+		return NewPoint(
+			rand.Float64()*360,
+			rand.Float64()*180,
+		)
+
 	}
 
-	return &Coordinate{
-		Lon: (rand.Float64() * (bbox.LonMax - bbox.LonMin)) + bbox.LonMin,
-		Lat: (rand.Float64() * (bbox.LatMax - bbox.LatMin)) + bbox.LatMin,
-	}
+	return NewPoint(
+		(rand.Float64()*(bbox.LonMax-bbox.LonMin))+bbox.LonMin,
+		(rand.Float64()*(bbox.LatMax-bbox.LatMin))+bbox.LatMin,
+	)
 }
 
-// NewRandomPoints generates random points as a GeoJSON feature oragnized in a collection.
+// NewRandomPoints generates random points as a GeoJSON feature organized in a collection.
 // If a bbox is given the points will be generated inside this bbox.
 func NewRandomPoints(count uint, bbox *Bbox) *geojson.FeatureCollection {
 	container := geojson.NewFeatureCollection()
 
 	for i := uint(0); i < count; i++ {
-		container.AddFeature(NewRandomCoordinate(bbox).AsFeature())
+		container.AddFeature(NewRandomPoint(bbox).AsFeature())
 	}
 
 	return container

@@ -33,10 +33,10 @@ func (bbox *Bbox) AsPolygon() (*geojson.Geometry, error) {
 	east := bbox.LonMax
 	north := bbox.LatMax
 
-	lowLeft := (&Coordinate{Lon: west, Lat: south}).AsTuple()
-	topLeft := (&Coordinate{Lon: west, Lat: north}).AsTuple()
-	topRight := (&Coordinate{Lon: east, Lat: north}).AsTuple()
-	lowRight := (&Coordinate{Lon: east, Lat: south}).AsTuple()
+	lowLeft := []float64{west, south}
+	topLeft := []float64{west, north}
+	topRight := []float64{east, north}
+	lowRight := []float64{east, south}
 
 	return geojson.NewPolygonGeometry([][][]float64{
 		[][]float64{
@@ -59,12 +59,12 @@ func NewBboxFromGeoJSON(thing interface{}) *Bbox {
 		LatMax: infNeg,
 	}
 
-	CoordEach(thing, func(coord *Coordinate, coordIndex, featureIndex, multiFeatureIndex, geometryIndex int) bool {
-		result.LonMin = math.Min(result.LonMin, coord.Lon)
-		result.LatMin = math.Min(result.LatMin, coord.Lat)
+	CoordEach(thing, func(p *Point, coordIndex, featureIndex, multiFeatureIndex, geometryIndex int) bool {
+		result.LonMin = math.Min(result.LonMin, p.Lon())
+		result.LatMin = math.Min(result.LatMin, p.Lat())
 
-		result.LonMax = math.Max(result.LonMax, coord.Lon)
-		result.LatMax = math.Max(result.LatMax, coord.Lat)
+		result.LonMax = math.Max(result.LonMax, p.Lon())
+		result.LatMax = math.Max(result.LatMax, p.Lat())
 
 		return true
 	})

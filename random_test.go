@@ -17,27 +17,27 @@ func newWorldBbox() *Bbox {
 	}
 }
 
-func TestNewRandomCoordinate(t *testing.T) {
-	t.Run("Returns a coordinate with and without bbox", func(t *testing.T) {
+func TestNewRandomPoint(t *testing.T) {
+	t.Run("Returns a point with and without bbox", func(t *testing.T) {
 		bboxes := []*Bbox{
 			newWorldBbox(),
 			nil,
 		}
 
 		for _, bbox := range bboxes {
-			got := NewRandomCoordinate(bbox)
+			got := NewRandomPoint(bbox)
 			assert.NotNil(t, got)
 		}
 	})
 
-	t.Run("Consecutive coordinates are different", func(t *testing.T) {
+	t.Run("Consecutive points are different", func(t *testing.T) {
 		const runs = 5
 		// Use a set to collect unique values
 		results := map[string]bool{}
 
 		for i := 0; i < runs; i++ {
-			coord := NewRandomCoordinate(nil)
-			results[geohash.Encode(coord.Lat, coord.Lon)] = true
+			point := NewRandomPoint(nil)
+			results[geohash.Encode(point.Lat(), point.Lon())] = true
 		}
 
 		// Number of elements in the set
